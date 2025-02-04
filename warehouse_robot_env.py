@@ -2,6 +2,7 @@ import gymnasium as gym
 from gymnasium import spaces
 from gymnasium.envs.registration import register
 from gymnasium.utils.env_checker import check_env
+import random
 
 import warehouse_robot as wr
 import numpy as np
@@ -10,11 +11,12 @@ import numpy as np
 class WarehouseRobotEnv(gym.Env):
     metadata = {"render_modes": ["human"], 'render_fps': 4}
 
-    def __init__(self, grid_rows=6, grid_cols=6, render_mode=None):
+    def __init__(self, grid_rows=6, grid_cols=6, render_mode=None, stochastic=False):
 
         self.grid_rows=grid_rows
         self.grid_cols=grid_cols
         self.render_mode = render_mode
+        self.stochastic = stochastic
     
         self.warehouse_robot = wr.WarehouseRobot(grid_rows=grid_rows, grid_cols=grid_cols, fps=self.metadata['render_fps'])
 
@@ -42,7 +44,12 @@ class WarehouseRobotEnv(gym.Env):
         return obs, info
 
     def step(self, action):
-        target_reached, reward = self.warehouse_robot.perform_action(wr.RobotAction(action))
+
+        if self.stochastic:
+            if random.random() < 0.1:
+                target_reached, reward = self.warehouse_robot.perform_action(wr.RobotAction(action))
+        else:
+            target_reached, reward = self.warehouse_robot.perform_action(wr.RobotAction(action))
 
         terminated=False
         if target_reached:
