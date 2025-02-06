@@ -7,6 +7,11 @@ import random
 import warehouse_robot as wr
 import numpy as np
 
+register(
+    id='warehouse-robot-v0',
+    entry_point='warehouse_robot_env:WarehouseRobotEnv',
+)
+
 
 class WarehouseRobotEnv(gym.Env):
     metadata = {"render_modes": ["human"], 'render_fps': 4}
@@ -67,3 +72,24 @@ class WarehouseRobotEnv(gym.Env):
 
     def render(self):
         self.warehouse_robot.render()
+
+if __name__ == "__main__":
+    env = gym.make('warehouse-robot-v0', render_mode='human')
+
+
+    obs = env.reset()[0]
+
+    total_reward = 0
+
+    while(True):
+        rand_action = env.action_space.sample()
+        obs, reward, terminated, _, _ = env.step(rand_action)
+
+        total_reward += reward
+
+        print(obs)
+
+        print("Task Complete:" ,terminated, " Reward: ", total_reward)
+
+        if(terminated):
+            obs = env.reset()[0]

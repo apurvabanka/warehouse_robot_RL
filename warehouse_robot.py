@@ -1,4 +1,3 @@
-import random
 from enum import Enum
 import pygame
 import sys
@@ -82,7 +81,7 @@ class WarehouseRobot:
     def reset(self, seed=None):
         self.robot_pos = [0,0]
         self.source_pos = [1,1]
-        self.obstacle_pos = [0,4]
+        self.obstacle_pos = [2,2]
         self.has_object = False
         self.done = False
 
@@ -119,12 +118,18 @@ class WarehouseRobot:
                     reward = -20
         elif robot_action == RobotAction.PICKUP and self.robot_pos == self.source_pos:
             self.has_object = True
-            self.robot_img = self.robot_package_img
-            self.source_img = self.floor_img
+            self.source_pos = self.robot_pos
             reward = 25
-        elif robot_action == RobotAction.DROPOFF and self.robot_pos == self.target_pos and self.has_object:
-            self.done = True
-            reward = 100
+        elif robot_action == RobotAction.DROPOFF:
+            if self.has_object:
+                if self.robot_pos == self.target_pos:
+                    self.done = True
+                    reward = 100
+                else:
+                    self.has_object = False
+                    self.done = True
+                    # self.source_pos = self.source_pos
+                    reward = -25
         
         return self.done, reward
     
