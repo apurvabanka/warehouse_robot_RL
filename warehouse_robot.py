@@ -81,7 +81,7 @@ class WarehouseRobot:
     def reset(self, seed=None):
         self.robot_pos = [0,0]
         self.source_pos = [1,1]
-        self.obstacle_pos = [2,2]
+        self.obstacle_pos = [2,3]
         self.has_object = False
         self.done = False
 
