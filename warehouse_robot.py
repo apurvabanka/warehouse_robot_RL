@@ -94,32 +94,47 @@ class WarehouseRobot:
 
         if robot_action == RobotAction.LEFT:
             if self.robot_pos[1]>0:
-                if self.robot_pos[1]-1 != self.obstacle_pos[1]:
-                    self.robot_pos[1]-=1
+                self.robot_pos[1]-=1
+                if self.robot_pos[1] != self.obstacle_pos[1]:
+                    reward = -1
                 else:
                     reward = -20
+            else:
+                reward = -10
         elif robot_action == RobotAction.RIGHT:
             if self.robot_pos[1]<self.grid_cols-1:
-                if self.robot_pos[1]+1 != self.obstacle_pos[1]:
-                    self.robot_pos[1]+=1
+                self.robot_pos[1]+=1
+                if self.robot_pos[1] != self.obstacle_pos[1]:
+                    reward = -1
                 else:
                     reward = -20
+            else:
+                reward = -10
         elif robot_action == RobotAction.UP:
             if self.robot_pos[0]>0:
-                if self.robot_pos[0]-1 != self.obstacle_pos[0]:
-                    self.robot_pos[0]-=1
+                self.robot_pos[0]-=1
+                if self.robot_pos[0] != self.obstacle_pos[0]:
+                    reward = -1
                 else:
                     reward = -20
+            else:
+                reward = -10
         elif robot_action == RobotAction.DOWN:
             if self.robot_pos[0]<self.grid_rows-1:
-                if self.robot_pos[0]+1 != self.obstacle_pos[0]:
-                    self.robot_pos[0]+=1
+                self.robot_pos[0]+=1
+                if self.robot_pos[0] != self.obstacle_pos[0]:
+                    reward = -1
                 else:
                     reward = -20
-        elif robot_action == RobotAction.PICKUP and self.robot_pos == self.source_pos:
-            self.has_object = True
-            self.source_pos = self.robot_pos
-            reward = 25
+            else:   
+                reward = -10
+        elif robot_action == RobotAction.PICKUP:
+            if self.robot_pos == self.source_pos and not self.has_object:
+                self.has_object = True
+                self.source_pos = self.robot_pos
+                reward = 25
+            else:
+                reward = -20
         elif robot_action == RobotAction.DROPOFF:
             if self.has_object:
                 if self.robot_pos == self.target_pos:
@@ -128,8 +143,9 @@ class WarehouseRobot:
                 else:
                     self.has_object = False
                     self.done = True
-                    # self.source_pos = self.source_pos
                     reward = -25
+            else:  
+                reward = -20
         
         return self.done, reward
     
