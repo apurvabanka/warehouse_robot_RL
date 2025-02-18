@@ -22,24 +22,28 @@ class WarehouseRobotEnv(gym.Env):
         self.grid_cols=grid_cols
         self.render_mode = render_mode
         self.stochastic = stochastic
+        self.timestep = 0
+        self.max_timesteps = 1000
     
         self.warehouse_robot = wr.WarehouseRobot(grid_rows=grid_rows, grid_cols=grid_cols, fps=self.metadata['render_fps'])
 
         self.action_space = spaces.Discrete(len(wr.RobotAction))
 
         self.observation_space = spaces.Box(
-            low=0,
-            high=np.array([self.grid_rows-1, self.grid_cols-1, self.grid_rows-1, self.grid_cols-1]),
-            shape=(4,),
+            low=np.array([0, 0, 0]),
+            high=np.array([self.grid_rows - 1, self.grid_cols - 1, 1]),
+            shape=(3,),
             dtype=np.int32
         )
+
+        self.reset()
 
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
 
         self.warehouse_robot.reset(seed=seed)
 
-        obs = np.concatenate((self.warehouse_robot.robot_pos, self.warehouse_robot.target_pos))
+        obs = np.concatenate((self.warehouse_robot.robot_pos, [int(self.warehouse_robot.has_object)]))
 
         info = {}
 
@@ -60,7 +64,7 @@ class WarehouseRobotEnv(gym.Env):
         if target_reached:
             terminated=True
 
-        obs = np.concatenate((self.warehouse_robot.robot_pos, self.warehouse_robot.target_pos))
+        obs = np.concatenate((self.warehouse_robot.robot_pos, [int(self.warehouse_robot.has_object)]))
 
         info = {}
 
