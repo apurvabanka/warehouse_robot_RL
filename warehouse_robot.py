@@ -3,6 +3,7 @@ import pygame
 import sys
 import os
 from os import path
+import random
 
 class RobotAction(Enum):
     LEFT=0
@@ -81,13 +82,13 @@ class WarehouseRobot:
     def reset(self, seed=None):
         self.robot_pos = [0,0]
         self.source_pos = [1,1]
-        self.obstacle_pos = [2,3]
+        self.obstacle_pos = [[2,3], [4,1], [4,3]]
         self.has_object = False
         self.done = False
 
         self.target_pos = [3,4]
     
-    def perform_action(self, robot_action:RobotAction) -> bool:
+    def perform_action(self, robot_action:RobotAction, stochastic=False) -> bool:
         
         self.last_action = robot_action
         reward = -1
@@ -95,25 +96,36 @@ class WarehouseRobot:
         if robot_action == RobotAction.LEFT:
             if self.robot_pos[1]>0:
                 self.robot_pos[1]-=1
-                if self.robot_pos[1] != self.obstacle_pos[1]:
+                if self.robot_pos not in self.obstacle_pos:
                     reward = -1
                 else:
                     reward = -20
             else:
                 reward = -10
         elif robot_action == RobotAction.RIGHT:
-            if self.robot_pos[1]<self.grid_cols-1:
-                self.robot_pos[1]+=1
-                if self.robot_pos[1] != self.obstacle_pos[1]:
-                    reward = -1
+            if not stochastic:
+                if self.robot_pos[1]<self.grid_cols-1:
+                    self.robot_pos[1]+=1
+                    if self.robot_pos not in self.obstacle_pos:
+                        reward = -1
+                    else:
+                        reward = -20
                 else:
-                    reward = -20
+                    reward = -10
             else:
-                reward = -10
+                if random.random() > 0.1:
+                    if self.robot_pos[1]<self.grid_cols-1:
+                        self.robot_pos[1]+=1
+                        if self.robot_pos not in self.obstacle_pos:
+                            reward = -1
+                        else:
+                            reward = -20
+                    else:
+                        reward = -10
         elif robot_action == RobotAction.UP:
             if self.robot_pos[0]>0:
                 self.robot_pos[0]-=1
-                if self.robot_pos[0] != self.obstacle_pos[0]:
+                if self.robot_pos not in self.obstacle_pos:
                     reward = -1
                 else:
                     reward = -20
@@ -122,7 +134,7 @@ class WarehouseRobot:
         elif robot_action == RobotAction.DOWN:
             if self.robot_pos[0]<self.grid_rows-1:
                 self.robot_pos[0]+=1
-                if self.robot_pos[0] != self.obstacle_pos[0]:
+                if self.robot_pos not in self.obstacle_pos:
                     reward = -1
                 else:
                     reward = -20
@@ -182,7 +194,7 @@ class WarehouseRobot:
 
                 if([r,c] == self.robot_pos):
                     self.window_surface.blit(self.robot_img, pos)
-                if([r,c] == self.obstacle_pos):
+                if([r,c] in self.obstacle_pos):
                     self.window_surface.blit(self.obstacle_img, pos)
                 
                 if([r,c] == self.source_pos):

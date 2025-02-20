@@ -53,12 +53,8 @@ class WarehouseRobotEnv(gym.Env):
         return obs, info
 
     def step(self, action):
-
-        if self.stochastic:
-            if random.random() < 0.1:
-                target_reached, reward = self.warehouse_robot.perform_action(wr.RobotAction(action))
-        else:
-            target_reached, reward = self.warehouse_robot.perform_action(wr.RobotAction(action))
+        
+        target_reached, reward = self.warehouse_robot.perform_action(wr.RobotAction(action), self.stochastic)
 
         terminated=False
         if target_reached:
