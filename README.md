@@ -46,7 +46,7 @@ pip install -r requirements.txt
 - NVDA.csv - The provided CSV file for model training.
 
 ## Reports
-- apurvaba_assignment_Report.pdf - The final complete report compiling all the outcomes and analysis for the same.
+- apurvaba_assignment_Report.pdf - The final complete report compiling all the outcomes and analysis for the same. This includes Part I, Part II and Part III. The bonus parts are re-implemented and added in the same report.
 
 # Preview
 
