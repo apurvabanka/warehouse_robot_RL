@@ -171,7 +171,7 @@ class WarehouseRobot:
                     print(GridTile.TARGET, end=' ')
                 elif([r,c] == self.source_pos):
                     print(GridTile.SOURCE, end=' ')
-                elif([r,c] == self.obstacle_pos):
+                elif([r,c] in self.obstacle_pos):
                     print(GridTile.OBSTACLE, end=' ')
                 else:
                     print(GridTile._FLOOR, end=' ')
