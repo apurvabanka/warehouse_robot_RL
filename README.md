@@ -2,6 +2,12 @@
 
 A robot operates in a warehouse grid where its task is to pick up items from specified locations and deliver them to designated drop-off points. The warehouse has shelves that act as obstacles and the robot must navigate around them efficiently.
 
+# Preview
+
+A preview of the ENV is as below. For simplicity the position of the objects in the env are fixed. Once, we move towards training the model, the positions will be randomly generarted.
+
+![Warehouse Robot GIF](warehouse_robot.gif)
+
 # Steps to configure ENV
 
 - Create a python virtual environment and activate it.
@@ -47,9 +53,3 @@ pip install -r requirements.txt
 
 ## Reports
 - apurvaba_assignment_Report.pdf - The final complete report compiling all the outcomes and analysis for the same. This includes Part I, Part II and Part III. The bonus parts are re-implemented and added in the same report.
-
-# Preview
-
-A preview of the ENV is as below. For simplicity the position of the objects in the env are fixed. Once, we move towards training the model, the positions will be randomly generarted.
-
-![Warehouse Robot GIF](warehouse_robot.gif)
